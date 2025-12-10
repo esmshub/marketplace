@@ -6,36 +6,15 @@ import { CSS } from "@dnd-kit/utilities";
 import { TableHead } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
-  MoreHorizontal,
-  ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  ArrowRight,
   GripVerticalIcon,
   ListTreeIcon,
-  MoveRightIcon,
   ArrowRightIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Fragment } from "react/jsx-runtime";
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Transfer = {
-  season: string;
-  date: string;
-  player: string;
-  age: number;
-  pos: string;
-  st: number;
-  tk: number;
-  ps: number;
-  sh: number;
-  ag: number;
-  fromClub: string;
-  toClub: string;
-  fee: number;
-};
+import { Transfer } from "@/lib/transfers";
 
 export const columns: ColumnDef<Transfer>[] = [
   {
