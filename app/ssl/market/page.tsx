@@ -4,6 +4,8 @@ import path from "path";
 import readline from "node:readline";
 import { columns, Transfer } from "./columns";
 import { DataTable } from "./data-table";
+import { auth } from "@/auth";
+import { ProfileMenu } from "@/components/ui/profile-menu";
 
 const transferRegex =
   /^(\w+\s+\d+)\s+(\S+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+([0-9][0-9,]*)(?:k)?$/;
@@ -90,13 +92,19 @@ async function getData(): Promise<Transfer[]> {
 }
 
 export default async function TransfersPage() {
-  const data = await getData();
+  const session = await auth();
+  const user = session?.user;
+
+  const data = user?.hasRole ? await getData() : [];
 
   return (
-    <div className="container mx-auto py-10">
-      <h1>SSL Transfers</h1>
-      <div className="">
-        <DataTable columns={columns} data={data} />
+    <div className="flex flex-col container mx-auto py-10 gap-y-4">
+      <div className="flex justify-between">
+        <h1>SSL Transfer Market</h1>
+        <ProfileMenu user={user} />
+      </div>
+      <div>
+        <DataTable columns={columns} data={data} user={user} />
       </div>
     </div>
   );

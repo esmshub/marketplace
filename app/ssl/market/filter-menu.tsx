@@ -31,22 +31,30 @@ export function FilterMenu({
   filtersVisible,
   setFiltersVisible,
   clearFilters,
+  enabled,
 }: {
   filtersVisible: boolean;
   setFiltersVisible: (func: (v: boolean) => boolean) => void;
   clearFilters: () => void;
+  enabled: boolean;
 }) {
   return (
     <ButtonGroup>
       <Button
         variant={filtersVisible ? "default" : "outline"}
         onClick={() => setFiltersVisible((v: boolean) => !v)}
+        disabled={!enabled}
       >
         <FunnelIcon />
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon" aria-label="More Options">
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label="More Options"
+            disabled={!enabled}
+          >
             <MoreHorizontalIcon />
           </Button>
         </DropdownMenuTrigger>

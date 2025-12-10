@@ -38,10 +38,12 @@ import { useEffect, useState } from "react";
 import { ColumnHeader, GroupToolbar } from "./columns";
 import { FilterMenu } from "./filter-menu";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { AuthPanel } from "../../components/ui/auth-panel";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  user: any;
 }
 
 // A typical debounced input react component
@@ -81,6 +83,7 @@ function DebouncedInput({
 export function DataTable<TData, TValue>({
   columns,
   data,
+  user,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -120,6 +123,7 @@ export function DataTable<TData, TValue>({
           filtersVisible={showFilters}
           setFiltersVisible={setShowFilters}
           clearFilters={table.resetColumnFilters}
+          enabled={user?.hasRole}
         />
         <ModeToggle />
       </div>
@@ -172,7 +176,7 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-inherit">
                 {headerGroup.headers.map((h) => (
-                  <ColumnHeader key={h.id} header={h} />
+                  <ColumnHeader key={h.id} header={h} enabled={user?.hasRole} />
                 ))}
               </TableRow>
             ))}
@@ -238,7 +242,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {user?.hasRole ? "No results." : <AuthPanel user={user} />}
                 </TableCell>
               </TableRow>
             )}

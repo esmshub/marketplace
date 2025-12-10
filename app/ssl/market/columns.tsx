@@ -166,10 +166,17 @@ export const columns: ColumnDef<Transfer>[] = [
   // }
 ];
 
-export function ColumnHeader({ header }: { header: Header<any, unknown> }) {
+export function ColumnHeader({
+  header,
+  enabled,
+}: {
+  header: Header<any, unknown>;
+  enabled: boolean;
+}) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: header.id,
     data: header.column,
+    disabled: !enabled,
   });
   const style = {
     // Outputs `translate3d(x, y, 0)`
