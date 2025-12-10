@@ -11,6 +11,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }),
     // ...add more providers here
   ],
+  trustHost: true,
   callbacks: {
     // async signIn({ user, account, profile }) {
     //   const accessToken = account.access_token;
