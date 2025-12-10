@@ -19,6 +19,7 @@ const errorMap = {
 
 export default function AuthErrorPage() {
   const search = useSearchParams();
+
   const error = search.get("error") as Error;
 
   return (
