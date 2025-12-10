@@ -42,6 +42,8 @@ export async function getTransfers(): Promise<Transfer[]> {
       crlfDelay: Infinity, // Handle all CRLF/CR line endings safely
     });
 
+    const season_transfers = [];
+
     for await (const line of rl) {
       if (line === "" || line.startsWith("---")) {
         // console.log("Ignored line:",line);
@@ -94,9 +96,11 @@ export async function getTransfers(): Promise<Transfer[]> {
         } else if (skills[0].name === "sh") {
           transfer.pos = "FW";
         }
-        transfers.push(transfer);
+        season_transfers.unshift(transfer);
       }
     }
+
+    transfers.push(...season_transfers)
   }
 
   transfers.sort((a, b) => b.season - a.season)
