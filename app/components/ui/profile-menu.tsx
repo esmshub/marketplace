@@ -42,7 +42,7 @@ export function ProfileMenu({ user }: { user: any }) {
             <Avatar>
               <AvatarImage src={user.image} />
               <AvatarFallback className="w-8 p-2 border-1 rounded-full ">
-                {user?.name?.split(/\s+/).map((s) => s[0])}
+                {user?.name?.split(/\s+/).map((s: string) => s[0])}
               </AvatarFallback>
             </Avatar>
           </Button>
