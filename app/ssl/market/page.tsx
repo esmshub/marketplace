@@ -6,6 +6,7 @@ import { columns, Transfer } from "./columns";
 import { DataTable } from "./data-table";
 import { auth } from "@/auth";
 import { ProfileMenu } from "@/components/ui/profile-menu";
+import type { DefaultUser } from "@auth/core/types";
 
 const transferRegex =
   /^(\w+\s+\d+)\s+(\S+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+([0-9][0-9,]*)(?:k)?$/;
@@ -93,7 +94,10 @@ async function getData(): Promise<Transfer[]> {
 
 export default async function TransfersPage() {
   const session = await auth();
-  const user = session?.user;
+  const user = session?.user as DefaultUser & {
+    hasRole: boolean;
+    isMember: boolean;
+  };
 
   const data = user?.hasRole ? await getData() : [];
 
