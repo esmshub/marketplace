@@ -1,6 +1,7 @@
 import { createReadStream, promises as fs } from "node:fs";
 import path from "path";
 import readline from "node:readline";
+import { unstable_cache } from "next/cache";
 
 export type Transfer = {
   season: number;
@@ -21,16 +22,11 @@ export type Transfer = {
 const transferRegex =
   /^(\w+\s+\d+)\s+(\S+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+([0-9][0-9,]*)(?:k)?$/;
 
-const transfers: Transfer[] = [];
-
-export async function getTransfers(): Promise<Transfer[]> {
-  if (transfers.length > 0) {
-    return transfers;
-  }
-
+async function loadPlayerTransfers(): Promise<Transfer[]> {
   const dir = path.join(process.cwd(), "app/data");
   const files = await fs.readdir(dir);
 
+  const transfers: Transfer[] = [];
   for (const file of files) {
     const fileName = path.basename(file);
     const stream = createReadStream("app/data/" + fileName, {
@@ -106,3 +102,14 @@ export async function getTransfers(): Promise<Transfer[]> {
   transfers.sort((a, b) => b.season - a.season)
   return transfers;
 }
+
+export const getCachedTransfers = unstable_cache(
+  async () => {
+    console.log("Loading player transfers...");
+    return loadPlayerTransfers();
+  },
+  undefined,
+  { 
+    revalidate: 3600 // 1hr
+  }
+);

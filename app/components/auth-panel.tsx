@@ -14,8 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import DiscordLogo from "@/img/discord.svg";
 import Image from "next/image";
 
-export function AuthPanel({ user }: { user: any }) {
-  if (user?.hasRole) {
+export function AuthPanel({ user }: { user: { isAdmin: boolean } }) {
+  if (user?.isAdmin) {
     return null;
   }
 

@@ -14,7 +14,7 @@ import {
   GroupingState,
   getExpandedRowModel,
 } from "@tanstack/react-table";
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeftToLineIcon,
@@ -37,13 +37,22 @@ import {
 import { useEffect, useState } from "react";
 import { ColumnHeader, GroupToolbar } from "./columns";
 import { FilterMenu } from "./filter-menu";
-import { ModeToggle } from "@/components/ui/mode-toggle";
-import { AuthPanel } from "../../components/ui/auth-panel";
+import { AuthPanel } from "@/components/auth-panel";
+import { EmptyPanel } from "@/components/empty-panel";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { SessionUser } from "next-auth";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  user: any;
+  user: SessionUser | undefined;
 }
 
 // A typical debounced input react component
@@ -89,6 +98,8 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [grouping, setGrouping] = useState<GroupingState>([]);
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [showDirectSalesOnly, setShowDirectSalesOnly] =
+    useState<boolean>(false);
 
   const table = useReactTable({
     data,
@@ -110,9 +121,9 @@ export function DataTable<TData, TValue>({
     globalFilterFn: "includesString",
   });
 
-  const handleDragEnd = ({ over, active }: { over: any; active: any }) => {
+  const handleDragEnd = ({ over, active }: DragEndEvent) => {
     if (over?.id === "group-dz") {
-      active.data?.current.toggleGrouping();
+      active.data.current?.toggleGrouping();
     }
   };
 
@@ -121,11 +132,12 @@ export function DataTable<TData, TValue>({
       <div className="flex mb-2 space-x-2 justify-end">
         <FilterMenu
           filtersVisible={showFilters}
+          directSalesOnly={showDirectSalesOnly}
+          setDirectSalesOnly={setShowDirectSalesOnly}
           setFiltersVisible={setShowFilters}
           clearFilters={table.resetColumnFilters}
-          enabled={user?.hasRole}
+          enabled={true}
         />
-        <ModeToggle />
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -176,7 +188,7 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-inherit">
                 {headerGroup.headers.map((h) => (
-                  <ColumnHeader key={h.id} header={h} enabled={user?.hasRole} />
+                  <ColumnHeader key={h.id} header={h} enabled={true} />
                 ))}
               </TableRow>
             ))}
@@ -242,15 +254,38 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {user?.hasRole ? "No results." : <AuthPanel user={user} />}
+                  <EmptyPanel
+                    title="No transfer history"
+                    description="No player transfers have been recorded yet."
+                  />
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex justify-center">
-        <div className="flex space-x-2 py-4">
+      <div className="grid grid-cols-3 grid-rows-2 justify-center mt-3 text-slate-600">
+        <div className="flex items-center text-sm">
+          <span className="align-center mr-2">Rows per page</span>
+          <Select
+            onValueChange={(pageSize) => table.setPageSize(Number(pageSize))}
+          >
+            <SelectTrigger className="!h-8 py-0 px-2 text-sm">
+              <SelectValue placeholder={table.getState().pagination.pageSize} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {/* <SelectLabel>Fruits</SelectLabel> */}
+                {[10, 20, 30, 40, 50].map((pageSize) => (
+                  <SelectItem key={pageSize} value={`${pageSize}`}>
+                    {pageSize}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex justify-center space-x-2">
           <Button
             variant="outline"
             size="sm"
@@ -284,6 +319,15 @@ export function DataTable<TData, TValue>({
             <ArrowRightToLineIcon />
           </Button>
         </div>
+        <div className="flex justify-end items-center text-sm">
+          Showing {table.getFilteredRowModel().rows.length} of{" "}
+          {table.getCoreRowModel().rows.length}
+        </div>
+        <span className="flex row-2 col-2 justify-center pt-2 text-sm">
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
+        </span>
+        <>&nbsp;</>
       </div>
     </DndContext>
   );

@@ -1,61 +1,88 @@
 import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import { createUser, getUser, getUserByEmail } from "./lib/repos/user";
+import { getCachedGuildMember, getGuildMember, sendNewUserNotification } from "./discord";
+import { revalidateTag, unstable_cache } from "next/cache";
+
+export const getCachedUser = unstable_cache(
+  (userId: number) => {
+    console.log(`Fetching user (${userId}) from Database...`)
+    return getUser(userId);
+  },
+  undefined,
+  { 
+    tags: ['users'],
+    revalidate: 300 // 5 mins
+  }
+)
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  // Configure one or more authentication providers
+  pages: {
+    signIn: "/login",
+    error: "/login",
+  },
   providers: [
     DiscordProvider({
       authorization: {
-        params: { scope: "identify guilds.members.read" },
+        params: { scope: "email guilds.members.read" },
       },
     }),
-    // ...add more providers here
   ],
   trustHost: true,
   callbacks: {
-    // async signIn({ user, account, profile }) {
-    //   const accessToken = account.access_token;
+    async signIn({ user, account }) {
+      if (!user.email) return false;
+      if (account?.provider !== "discord") return false;
 
-    //   const guildProfile = await fetch(
-    //     `https://discord.com/api/users/@me/guilds/${process.env.DISCORD_GUILD_ID}/member`,
-    //     {
-    //       headers: { Authorization: `Bearer ${accessToken}` },
-    //     }
-    //   ).then((res) => res.json());
+      const guildMembership = await getGuildMember(account.providerAccountId);
+      if (!guildMembership) return false;
+      if (guildMembership.pending) return "/login?error=AccountPending";
 
-    //   // console.log(guildProfile);
-
-    //   if (!guildProfile.roles.includes(process.env.DISCORD_MEMBER_ROLE_ID)) {
-    //     console.error(`User does not hold required role (${process.env.DISCORD_MEMBER_ROLE_ID}) in guild (${process.env.DISCORD_GUILD_ID})`);
-    //     return false;
-    //   }
-
-    //   return true; // allow login
-    // },
-    async jwt({ token, account }) {
-      if (account?.access_token) {
-        // check role is assigned
-        const guildProfile = await fetch(
-          `https://discord.com/api/users/@me/guilds/${process.env.DISCORD_GUILD_ID}/member`,
-          {
-            headers: { Authorization: `Bearer ${account?.access_token}` },
-          }
-        ).then((res) => res.json());
-
-        token.isMember = !!guildProfile
-        token.hasRole = guildProfile?.roles?.includes(process.env.DISCORD_MEMBER_ROLE_ID)
+      const appUser = await getUserByEmail(user.email);
+      if (!appUser) {
+        await createUser({
+          emailAddress: user.email,
+          fullName: user.name ?? "",
+          provider: account.provider,
+          providerAccountId: account.providerAccountId,
+        });
+        await sendNewUserNotification(guildMembership.user.id);
       }
+
+      return true;
+    },
+    async jwt({ token, user, account, profile }) {
+      if (user) {
+        // initial sign-in switch the sub in JWT to DB User ID
+        const profile = await getUserByEmail(user.email!);
+        if (!profile) throw new Error("User not found");
+
+        token.sub = profile.id.toString();
+      }
+
       return token;
     },
     async session({ session, token }) {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          hasRole: token.hasRole,
-          isMember: token.isMember,
-        },
-      };
+      // TODO: cache this
+      const appUser = await getCachedUser(parseInt(token.sub!));
+      if (!appUser) {
+        revalidateTag("users", "max");
+        throw new Error('Local account not found');
+      }
+
+      if (appUser.provider === "discord") {
+        // refresh Discord roles
+        const discordAccount = await getCachedGuildMember(appUser.providerAccountId!);
+        if (!discordAccount) {
+          revalidateTag("discord", "max");
+          throw new Error("Provider account not found");
+        }
+
+        // session.user.isAdmin = discordAccount.roles?.includes(process.env.DISCORD_ADMIN_ROLE_ID!);
+        session.user.isAdmin = true;
+      }
+
+      return session;
     }
   },
 });
