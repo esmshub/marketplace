@@ -4,11 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prisma:deploy": "npx prisma generate && npx prisma migrate deploy",
+    "prisma:reset": "npx prisma generate && npx prisma migrate reset && npx prisma db seed",
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run prisma:deploy && next build",
     "start": "next start",
-    "lint": "eslint",
-    "db:reset": "prisma migrate reset && prisma db seed"
+    "lint": "eslint"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
