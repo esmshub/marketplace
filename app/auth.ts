@@ -78,8 +78,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           throw new Error("Provider account not found");
         }
 
-        // session.user.isAdmin = discordAccount.roles?.includes(process.env.DISCORD_ADMIN_ROLE_ID!);
-        session.user.isAdmin = true;
+        session.user.isAdmin = discordAccount.roles?.includes(process.env.DISCORD_ADMIN_ROLE_ID!);
+        // session.user.isAdmin = true;
       }
 
       return session;
