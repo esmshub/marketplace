@@ -15,6 +15,10 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import SyncResult from "./sync-result";
 
+// TODO: fix two scenarios
+// 1. If page is refreshed during sync, button shows still syncing but when it's finished we get no update
+// 2. If first sync and in progress, don't show anything (otherwise trying to expand throws error)
+
 export default function DataSyncItem() {
   const [activeGame] = useActiveGame();
   const [state, formAction, pending] = useActionState(syncGameData, {});
@@ -63,7 +67,9 @@ export default function DataSyncItem() {
           </div>
           <Input type="hidden" name="gameId" value={activeGame!.id} />
         </form>
-        {syncResult && <SyncResult data={syncResult} />}
+        {syncResult && syncResult.status !== "started" && (
+          <SyncResult data={syncResult} />
+        )}
       </ItemContent>
     </Item>
   );

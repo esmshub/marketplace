@@ -1,16 +1,20 @@
 "use client";
 
 import LoginForm from "./login-form";
-import { redirect, RedirectType, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
+import { redirect, RedirectType } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Toaster } from "@/components/ui/sonner";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
+import { EmptyPanel } from "@/components/empty-panel";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function LoginPage() {
   const { status } = useSession();
 
-  if (status === "authenticated") {
+  console.log(status);
+  if (status === "loading") {
+    return null;
+  } else if (status === "authenticated") {
     return redirect("/", RedirectType.replace);
   }
 

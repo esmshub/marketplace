@@ -7,6 +7,7 @@ declare module "next-auth" {
   interface SessionUser extends Omit<User, "id"> {
     id: number
     isAdmin: boolean
+    username: string
   }
 
 

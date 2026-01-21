@@ -40,6 +40,8 @@ export default class SslClubDataSource implements DataSource<ClubData[]> {
     if (res.headers.has('Last-Modified')) {
       lastModified = new Date(res.headers.get('Last-Modified')!);
     }
+    const url = new URL(this.sourceUrl);
+    const rootUrl = `${url.protocol}//${url.host}`;
 
     const teamsHtml = await res.text();
     const $ = cheerio.load(teamsHtml);
@@ -55,9 +57,9 @@ export default class SslClubDataSource implements DataSource<ClubData[]> {
 
       try {
         const seniorRosterFile = $(fields.get(2))?.find("a")?.attr("href")?.trim() as string;
-        const seniorRosterUrl = `${process.env.SSL_ROOT_URL}/${seniorRosterFile}`;
+        const seniorRosterUrl = `${rootUrl}/${seniorRosterFile}`;
         const youthRosterFile = $(fields.get(4))?.find("a")?.attr("href")?.trim() as string;
-        const youthRosterUrl = `${process.env.SSL_ROOT_URL}/${youthRosterFile}`;
+        const youthRosterUrl = `${rootUrl}/${youthRosterFile}`;
         const clubName = normalizeWhitespace($(fields.get(0))?.text());
         const managerName = $(fields.get(5))?.find("u")?.text().trim().replace(/_+II$/i, "")
         const managerEmail = $(fields.get(5))?.find("a")?.attr("href")?.trim()?.replace("mailto:", "") as string

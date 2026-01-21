@@ -12,7 +12,7 @@ export const getCachedUser = unstable_cache(
   undefined,
   { 
     tags: ['users'],
-    revalidate: 300 // 5 mins
+    revalidate: parseInt(process.env.CACHE_USER_TTL || '5'),
   }
 )
 
@@ -63,23 +63,16 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      // TODO: cache this
       const appUser = await getCachedUser(parseInt(token.sub!));
-      if (!appUser) {
-        revalidateTag("users", "max");
-        throw new Error('Local account not found');
-      }
+      if (!appUser) throw new Error('Local account not found');
 
       if (appUser.provider === "discord") {
         // refresh Discord roles
         const discordAccount = await getCachedGuildMember(appUser.providerAccountId!);
-        if (!discordAccount) {
-          revalidateTag("discord", "max");
-          throw new Error("Provider account not found");
-        }
+        if (!discordAccount) throw new Error("Provider account not found");
 
         session.user.isAdmin = discordAccount.roles?.includes(process.env.DISCORD_ADMIN_ROLE_ID!);
-        // session.user.isAdmin = true;
+        session.user.username = discordAccount.user.username;
       }
 
       return session;

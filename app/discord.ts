@@ -24,10 +24,10 @@ function apiCall<T>(url: string, method: string = "GET", body?: T) {
   })
 }
 
-export const getGuildMember = async (memberId: string): Promise<GuildMember | null> => {    
+export const getGuildMember = async (memberId: string): Promise<GuildMember | undefined> => {    
   console.log(`Fetching user profile (${memberId}) from Discord...`)
   const res = await apiCall(`${process.env.DISCORD_API_URL}/guilds/${process.env.DISCORD_GUILD_ID}/members/${memberId}`);
-  return res.ok ? await res.json() : null
+  return res.ok ? await res.json() : undefined
 }
 
 export const getCachedGuildMember = unstable_cache(
@@ -35,7 +35,7 @@ export const getCachedGuildMember = unstable_cache(
   undefined,
   { 
     tags: ['discord'],
-    revalidate: 300 // 5 mins
+    revalidate: parseInt(process.env.CACHE_DISCORD_TTL || '10'), // default to 5s
   }
 )
 
