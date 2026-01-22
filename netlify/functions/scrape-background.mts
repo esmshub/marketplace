@@ -10,7 +10,7 @@ import { ClubGetPayload, PlayerGetPayload } from "@/lib/generated/prisma/models"
 import { PlayerDto } from "@/lib/data/dataSource";
 import { Config, Context } from "@netlify/functions";
 
-const scrapeData = async (req: Request, context: Context) => {
+export default async function scrapeData(req: Request, context: Context) {
   const { id } = context.params;
   const gameId = parseInt(id);
 
@@ -19,7 +19,7 @@ const scrapeData = async (req: Request, context: Context) => {
   const body = await req.json();
   if (!body.sourceUrl) return Response.json({ error: "sourceUrl is not valid" }, { status: 400 });
 
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET! });
+  const token = await getToken({ req, secret: Netlify.env.get("NEXTAUTH_SECRET") });
   if (!token) return Response.json({ error: "Unauthenticated" }, { status: 401 });
 
   const game = await getGame(gameId, { dataSyncs: true });
@@ -151,8 +151,6 @@ const scrapeData = async (req: Request, context: Context) => {
     return Response.json({ error: "Operation is Forbidden" }, { status: 403 });
   }
 };
-
-export default scrapeData;
 
 export const config: Config = {
   path: "/api/games/:id/sync"
