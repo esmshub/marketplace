@@ -1,4 +1,4 @@
-import { unstable_cache } from "next/cache"
+// import { unstable_cache } from "next/cache"
 
 interface DiscordUser {
   id: string
@@ -30,14 +30,14 @@ export const getGuildMember = async (memberId: string): Promise<GuildMember | un
   return res.ok ? await res.json() : undefined
 }
 
-export const getCachedGuildMember = unstable_cache(
-  getGuildMember,
-  undefined,
-  { 
-    tags: ['discord'],
-    revalidate: parseInt(process.env.CACHE_DISCORD_TTL || '10'), // default to 5s
-  }
-)
+// export const getCachedGuildMember = unstable_cache(
+//   getGuildMember,
+//   undefined,
+//   { 
+//     tags: ['discord'],
+//     revalidate: parseInt(process.env.CACHE_DISCORD_TTL || '10'), // default to 5s
+//   }
+// )
 
 export const sendNewUserNotification = async (discordId: string) => {
   try {

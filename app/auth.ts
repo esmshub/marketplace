@@ -1,20 +1,20 @@
 import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { createUser, getUser, getUserByEmail } from "./lib/repos/user";
-import { getCachedGuildMember, getGuildMember, sendNewUserNotification } from "./discord";
-import { revalidateTag, unstable_cache } from "next/cache";
+import { getGuildMember, sendNewUserNotification } from "./discord";
+// import { unstable_cache } from "next/cache";
 
-export const getCachedUser = unstable_cache(
-  (userId: number) => {
-    console.log(`Fetching user (${userId}) from Database...`)
-    return getUser(userId);
-  },
-  undefined,
-  { 
-    tags: ['users'],
-    revalidate: parseInt(process.env.CACHE_USER_TTL || '5'),
-  }
-)
+// export const getCachedUser = unstable_cache(
+//   (userId: number) => {
+//     console.log(`Fetching user (${userId}) from Database...`)
+//     return getUser(userId);
+//   },
+//   undefined,
+//   { 
+//     tags: ['users'],
+//     revalidate: parseInt(process.env.CACHE_USER_TTL || '5'),
+//   }
+// )
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   pages: {
@@ -63,12 +63,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      const appUser = await getCachedUser(parseInt(token.sub!));
+      const appUser = await getUser(parseInt(token.sub!));
       if (!appUser) throw new Error('Local account not found');
 
       if (appUser.provider === "discord") {
         // refresh Discord roles
-        const discordAccount = await getCachedGuildMember(appUser.providerAccountId!);
+        const discordAccount = await getGuildMember(appUser.providerAccountId!);
         if (!discordAccount) throw new Error("Provider account not found");
 
         session.user.isAdmin = discordAccount.roles?.includes(process.env.DISCORD_ADMIN_ROLE_ID!);
