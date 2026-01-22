@@ -9,11 +9,14 @@ export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/api/auth')) return NextResponse.next();
   // TODO: just a temp thing as this will go to Netlify
   if (request.nextUrl.pathname.startsWith('/api/games')) return NextResponse.next();
-  if (request.nextUrl.pathname === '/login') return NextResponse.next();
 
   const session = await auth();
   const isAuthenticated = session && new Date(session.expires).getTime() > Date.now();
   const isApiRoute = request.nextUrl.pathname.startsWith('/api');
+
+  console.log('Session:', session);
+  console.log('isAuthenticated:', isAuthenticated);
+  console.log('isApiRoute:', isApiRoute);
 
   if (!isAuthenticated && isApiRoute) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   if (!isAuthenticated) return NextResponse.redirect(new URL('/login?redirect=' + request.nextUrl.pathname, request.url));
@@ -23,5 +26,5 @@ export async function proxy(request: NextRequest) {
 
 // Optionally, don't invoke Middleware on some paths
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!login|_next/static|_next/image|favicon.ico).*)"],
 }
