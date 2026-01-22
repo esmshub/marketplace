@@ -8,9 +8,9 @@ import { getToken } from "next-auth/jwt";
 import { findClubs, summarizeResults, updateClub, getPosition, updatePlayer, insertPlayer, insertClub } from "./helpers.mjs";
 import { ClubGetPayload, PlayerGetPayload } from "@/lib/generated/prisma/models";
 import { PlayerDto } from "@/lib/data/dataSource";
-import { Config, Context } from "@netlify/functions";
+import type { Config, Context } from "@netlify/functions";
 
-export default async function scrapeData(req: Request, context: Context) {
+export default async (req: Request, context: Context) => {
   const { id } = context.params;
   const gameId = parseInt(id);
 
