@@ -62,7 +62,6 @@ export async function syncGameData(initialState: object, formData: FormData): Pr
   // attempt to deserialize response (successful or not)
   try {
     const body = await res.json();
-    revalidateTag("clubs", "max");
     return body;
   } catch (e) {
     console.warn(e);
