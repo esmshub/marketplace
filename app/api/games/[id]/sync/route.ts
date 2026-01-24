@@ -20,8 +20,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const body = await req.json();
   if (!body.sourceUrl) return Response.json({ error: "sourceUrl is not valid" }, { status: 400 });
 
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET! });
-  if (!token) return Response.json({ error: "Unauthenticated" }, { status: 401 });
+  // const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET! });
+  // if (!token) return Response.json({ error: "Unauthenticated" }, { status: 401 });
 
   const game = await getGame(gameId, { dataSyncs: true });
   if (!game) return Response.json({ error: "Game not found" }, { status: 404 });
