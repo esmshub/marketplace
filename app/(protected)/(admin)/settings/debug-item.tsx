@@ -15,18 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function DebugItem() {
-  const [activeGame] = useActiveGame();
   const [state, formAction, pending] = useActionState(invalidateCache, {});
-
-  const failed = "error" in state;
-  const hasResult = !failed && !pending && Object.keys(state).length;
-  const syncResult = hasResult ? state : activeGame?.lastSync;
-
-  useEffect(() => {
-    if ("error" in state) {
-      toast.error(state.error);
-    }
-  }, [state, hasResult]);
 
   return (
     <Item>
