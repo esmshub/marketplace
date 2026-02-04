@@ -11,7 +11,11 @@ export default function AdminAppLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <EmptyPanel icon={<Spinner />} title="Loading..." description="" />;
+  }
 
   if (!session?.user?.isAdmin) {
     return (

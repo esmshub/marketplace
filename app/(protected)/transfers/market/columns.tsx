@@ -98,20 +98,17 @@ export const columns: ColumnDef<PlayerDto>[] = [
     },
     sortingFn: (rowA, rowB, columnId) => {
       return (rowA.original.club?.name ?? "Free agent").localeCompare(
-        rowB.original.club?.name ?? "Free agent"
+        rowB.original.club?.name ?? "Free agent",
       );
     },
-    cell: ({ row }) => (
-      // <Button variant="link" className="p-0 cursor-pointer">
-      //   {row.original.club.name}
-      // </Button>
-      <Link
-        href={{ query: { clubId: row.original.club!.id } }}
-        className="hover:underline"
-      >
-        {row.original.club?.name ?? "Free agent"}
-      </Link>
-    ),
+    cell: ({ row }) =>
+      // <Link
+      //   href={{ query: { clubId: row.original.club!.id } }}
+      //   className="hover:underline"
+      // >
+      //   {row.original.club?.name ?? "Free agent"}
+      // </Link>
+      row.original.club?.name ?? "Free agent",
   },
   {
     header: "Pos",

@@ -128,7 +128,6 @@ export async function updateClub(data: ClubData) {
     });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2025") {
-      console.log(`No changes detected for club (${data.shortCode}).`);
       return null
     }
 
@@ -180,7 +179,6 @@ export async function updatePlayer(player: PlayerDto) {
     });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2025") {
-      console.log(`No changes detected for player (${data.name}).`);
       return null
     }
 
@@ -192,4 +190,12 @@ export async function insertPlayer(player: PlayerDto) {
   const { id, gameId, club, ...payload } = player;
   const data = { ...payload, gameId: gameId! }
   return await prisma.player.create({ data });
+}
+
+export async function getPlayers(gameId: number) {
+  return await prisma.player.findMany({
+    where: {
+      gameId: gameId
+    }
+  });
 }

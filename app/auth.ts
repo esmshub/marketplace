@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { createUser, getUser, getUserByEmail } from "./lib/repos/user";
 import { getGuildMember, sendNewUserNotification } from "./discord";
+import { revalidateTag } from "next/cache";
 // import { unstable_cache } from "next/cache";
 
 // export const getCachedUser = unstable_cache(
@@ -35,8 +36,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (account?.provider !== "discord") return false;
 
       const guildMembership = await getGuildMember(account.providerAccountId);
-      if (!guildMembership) return false;
-      if (guildMembership.pending) return "/login?error=AccountPending";
+      if (!guildMembership) {
+        revalidateTag(`discord:${account.providerAccountId}`, "max");
+        return false;
+      }
+      if (guildMembership.pending) {
+        revalidateTag(`discord:${account.providerAccountId}`, "max");
+        return "/login?error=AccountPending";
+      }
 
       const appUser = await getUserByEmail(user.email);
       if (!appUser) {
@@ -69,7 +76,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (appUser.provider === "discord") {
         // refresh Discord roles
         const discordAccount = await getGuildMember(appUser.providerAccountId!);
-        if (!discordAccount) throw new Error("Provider account not found");
+        if (!discordAccount) {
+          revalidateTag(`discord:${appUser.providerAccountId}`, "max");
+          throw new Error("Provider account not found");
+        }
 
         session.user.isAdmin = discordAccount.roles?.includes(process.env.DISCORD_ADMIN_ROLE_ID!);
         session.user.username = discordAccount.user.username;

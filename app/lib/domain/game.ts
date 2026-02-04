@@ -53,7 +53,7 @@ export class Game {
     const newSync = new DataSync();
     newSync.userId = userId;
     newSync.gameId = this.id;
-    newSync.status = "started";
+    newSync.status = "running";
     newSync.startTime = new Date();
     await newSync.save();
     this.dataSyncs.push(newSync);

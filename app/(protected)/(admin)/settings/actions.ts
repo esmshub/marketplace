@@ -1,15 +1,13 @@
 "use server";
 
 import { auth } from "@/auth";
-import { AuthnError, AuthzError, CompoundError, InternalError, NotFoundError, ValidationError } from "@/lib/errors";
-import SslClubDataSource from "@/lib/data/sslClubDataSource";
+import { AuthnError, AuthzError, NotFoundError, ValidationError } from "@/lib/errors";
 import { getGame } from "@/lib/repos/game";
-import { findLeague } from "@/lib/repos/league";
 import * as z from "zod"; 
 import { getToken } from "next-auth/jwt"
 import { cookies } from "next/headers";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { DataSyncDto, DataSyncFailedMetadata, DataSyncSuccessfulMetadata } from "@/lib/domain/dataSync";
+import { revalidateTag } from "next/cache";
 
 interface SyncResponse {
   startTime: string;
@@ -69,4 +67,13 @@ export async function syncGameData(initialState: object, formData: FormData): Pr
       error: "Unknown error has occurred"
     }
   }
+}
+
+export async function invalidateCache(initialState: object, formData: FormData): Promise<object> {
+  ["clubs", "players", "discord"].map(tag => {
+    revalidateTag(tag, "max");
+    console.log(`Invalidated ${tag}`);
+  });
+  
+  return {};
 }

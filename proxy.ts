@@ -14,9 +14,7 @@ export async function proxy(request: NextRequest) {
   const isAuthenticated = session && new Date(session.expires).getTime() > Date.now();
   const isApiRoute = request.nextUrl.pathname.startsWith('/api');
 
-  console.log('Session:', session);
-  console.log('isAuthenticated:', isAuthenticated);
-  console.log('isApiRoute:', isApiRoute);
+  // console.log('Session:', session);
 
   if (!isAuthenticated && isApiRoute) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   if (!isAuthenticated) return NextResponse.redirect(new URL('/login?redirect=' + request.nextUrl.pathname, request.url));

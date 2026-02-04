@@ -1,0 +1,16 @@
+import { ClubInclude } from "@/lib/generated/prisma/models";
+import { getClubs } from "@/lib/repos/club";
+import { unstable_cache } from "next/cache";
+import { NextRequest } from "next/server";
+
+
+// To handle a GET request to /api
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams
+  const includePlayers = searchParams.get('players')?.toLowerCase() === 'true';
+
+  console.log("Fetching players from Database...");
+  const clubs = await getClubs({ players: includePlayers });
+
+  return Response.json(clubs, { status: 200 });
+}

@@ -1,5 +1,3 @@
-// import { unstable_cache } from "next/cache"
-
 interface DiscordUser {
   id: string
   username: string
@@ -13,31 +11,43 @@ interface GuildMember {
   roles: string[]
 }
 
-function apiCall<T>(url: string, method: string = "GET", body?: T) {
-  return fetch(url, {
+function apiCall<T>(url: string, method: string = "GET", body?: T, cacheOptions?: NextFetchRequestConfig & { cacheTrace?: boolean }) {
+  const { cacheTrace, ...nextOptions } = cacheOptions || {};
+  let start = 0
+  if (cacheTrace) {
+      start = performance.now();
+  }
+  const res = fetch(url, {
     method,
     headers: {
       Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
-  })
+    ...(cacheOptions && { next: nextOptions }),
+  });
+  if (cacheTrace) {
+    const elapsed = performance.now() - start
+    console.log(
+      `[fetch] url=${url} time=${elapsed.toFixed(1)}ms`,
+      elapsed < 20 ? '(HIT)' : '(MISS)'
+    );
+  }
+
+  return res;
 }
 
-export const getGuildMember = async (memberId: string): Promise<GuildMember | undefined> => {    
-  console.log(`Fetching user profile (${memberId}) from Discord...`)
-  const res = await apiCall(`${process.env.DISCORD_API_URL}/guilds/${process.env.DISCORD_GUILD_ID}/members/${memberId}`);
+
+export const getGuildMember = async (memberId: string): Promise<GuildMember | undefined> => {  
+  const res = await apiCall(
+    `${process.env.DISCORD_API_URL}/guilds/${process.env.DISCORD_GUILD_ID}/members/${memberId}`,
+    'GET',
+    undefined,
+    { revalidate: 3600, tags: [`discord:${memberId}`, 'discord'] }
+  );
+
   return res.ok ? await res.json() : undefined
 }
-
-// export const getCachedGuildMember = unstable_cache(
-//   getGuildMember,
-//   undefined,
-//   { 
-//     tags: ['discord'],
-//     revalidate: parseInt(process.env.CACHE_DISCORD_TTL || '10'), // default to 5s
-//   }
-// )
 
 export const sendNewUserNotification = async (discordId: string) => {
   try {

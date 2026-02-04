@@ -67,7 +67,7 @@ export default function DataSyncItem() {
           </div>
           <Input type="hidden" name="gameId" value={activeGame!.id} />
         </form>
-        {syncResult && syncResult.status !== "started" && (
+        {syncResult && syncResult.status !== "running" && (
           <SyncResult data={syncResult} />
         )}
       </ItemContent>
