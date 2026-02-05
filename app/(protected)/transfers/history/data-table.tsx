@@ -128,7 +128,7 @@ export function DataTable<TData, TValue>({
   };
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext id="transfer-history" onDragEnd={handleDragEnd}>
       <div className="flex mb-2 space-x-2 justify-end">
         <FilterMenu
           filtersVisible={showFilters}
@@ -223,7 +223,7 @@ export function DataTable<TData, TValue>({
                               )}{" "}
                               {flexRender(
                                 cell.column.columnDef.cell,
-                                cell.getContext()
+                                cell.getContext(),
                               )}{" "}
                               ({row.subRows.length})
                             </div>
@@ -235,13 +235,13 @@ export function DataTable<TData, TValue>({
                         flexRender(
                           cell.column.columnDef.aggregatedCell ??
                             cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )
                       ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                         // Otherwise, just render the regular cell
                         flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )
                       )}
                     </TableCell>

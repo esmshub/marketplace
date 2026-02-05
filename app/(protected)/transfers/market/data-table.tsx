@@ -175,7 +175,7 @@ export function DataTable<TData, TValue>({
   // }, [table, staticFilters]);
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext id="transfer-market" onDragEnd={handleDragEnd}>
       <div className="flex justify-between">
         <div className="flex justify-start"></div>
         <div className="flex mb-2 space-x-2 justify-end">
@@ -324,7 +324,7 @@ export function DataTable<TData, TValue>({
                               )}{" "}
                               {flexRender(
                                 cell.column.columnDef.cell,
-                                cell.getContext()
+                                cell.getContext(),
                               )}{" "}
                               ({row.subRows.length})
                             </div>
@@ -336,13 +336,13 @@ export function DataTable<TData, TValue>({
                         flexRender(
                           cell.column.columnDef.aggregatedCell ??
                             cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )
                       ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                         // Otherwise, just render the regular cell
                         flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )
                       )}
                     </TableCell>
