@@ -41,6 +41,7 @@ export async function syncGameData(initialState: object, formData: FormData): Pr
       Authorization: `Bearer ${process.env.NEXTAUTH_SECRET}`, // or pass full JWT if you like
     },
     body: JSON.stringify({
+      userId: session.user.id,
       sourceUrl: form.data.sourceUrl
     }),
   });

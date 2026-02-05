@@ -19,7 +19,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   const body = await req.json();
   if (!body.sourceUrl) return Response.json({ error: "sourceUrl is not valid" }, { status: 400 });
-
+  if (!body.userId) return Response.json({ error: "userId is not valid" }, { status: 400 });
+ 
   const authHeader = req.headers.get("authorization")
   if (authHeader !== `Bearer ${process.env.NEXTAUTH_SECRET}`){
     return new Response("Unauthorized", { status: 401 })
@@ -31,7 +32,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (game.code === "ssl") {
     let dataSync: DataSync;
     try {
-      dataSync = await game.startSync(parseInt(token.sub!));
+      dataSync = await game.startSync(body.userId);
     } catch (e) {
       if (e instanceof InvalidStateError && e.message.includes("cooling off")) {
         return Response.json({ error: e.message }, { status: 429 });

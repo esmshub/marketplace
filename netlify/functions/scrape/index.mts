@@ -18,6 +18,7 @@ export default async (req: Request, context: Context) => {
 
   const body = await req.json();
   if (!body.sourceUrl) return Response.json({ error: "sourceUrl is not valid" }, { status: 400 });
+  if (!body.userId) return Response.json({ error: "userId is not valid" }, { status: 400 });
 
   const token = await getToken({ req, secret: Netlify.env.get("NEXTAUTH_SECRET") });
   if (!token) return Response.json({ error: "Unauthenticated" }, { status: 401 });
@@ -28,7 +29,7 @@ export default async (req: Request, context: Context) => {
   if (game.code === "ssl") {
     let dataSync: DataSync;
     try {
-      dataSync = await game.startSync(parseInt(token.sub!));
+      dataSync = await game.startSync(body.userId);
     } catch (e) {
       if (e instanceof InvalidStateError && e.message.includes("cooling off")) {
         return Response.json({ error: e.message }, { status: 429 });

@@ -1,8 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, { Account, User } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { createUser, getUser, getUserByEmail } from "./lib/repos/user";
 import { getGuildMember, sendNewUserNotification } from "./discord";
 import { revalidateTag } from "next/cache";
+import { JWT } from "next-auth/jwt";
+import { AdapterSession, AdapterUser } from "next-auth/adapters";
 // import { unstable_cache } from "next/cache";
 
 // export const getCachedUser = unstable_cache(
@@ -64,13 +66,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         const profile = await getUserByEmail(user.email!);
         if (!profile) throw new Error("User not found");
 
-        token.sub = profile.id.toString();
+        token.sub = account?.providerAccountId
+        token.userId = profile.id.toString();
       }
 
       return token;
     },
     async session({ session, token }) {
-      const appUser = await getUser(parseInt(token.sub!));
+      const appUser = await getUser(parseInt(token["userId"] as string));
       if (!appUser) throw new Error('Local account not found');
 
       if (appUser.provider === "discord") {
@@ -83,9 +86,34 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         session.user.isAdmin = discordAccount.roles?.includes(process.env.DISCORD_ADMIN_ROLE_ID!);
         session.user.username = discordAccount.user.username;
+        session.user.providerId = appUser.providerAccountId!;
       }
 
       return session;
     }
   },
+  events: {
+    createUser(msg: { user: User }) {
+      console.log(msg);
+      console.log(`[auth] Created user (${msg.user.id}) in Database...`);
+    },
+    linkAccount(msg: {
+      user: User | AdapterUser
+      account: Account
+      profile: User | AdapterUser
+    }) {
+      console.log(msg);
+      console.log(`[auth] Linked account (${msg.account.providerAccountId}) in Database...`);
+    },
+    updateUser(msg: { user: User }) {
+      console.log(msg);
+      console.log(`[auth] Updated user (${msg.user.id}) in Database...`);
+    },
+    signOut(msg: { session: void | null | AdapterSession } | { token: null | JWT }) {
+      console.log(`[auth] Signed out user...`);
+      if ('token' in msg) {
+        revalidateTag(`discord:${msg.token?.sub}`, "max");
+      }
+    }
+  }
 });
