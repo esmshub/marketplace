@@ -1,6 +1,4 @@
-import { ClubInclude } from "@/lib/generated/prisma/models";
 import { getClubs } from "@/lib/repos/club";
-import { unstable_cache } from "next/cache";
 import { NextRequest } from "next/server";
 
 

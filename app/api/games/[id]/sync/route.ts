@@ -5,7 +5,6 @@ import { DataSync } from "@/lib/domain/dataSync";
 import { InvalidStateError } from "@/lib/domain/errors";
 import { getGame } from "@/lib/repos/game";
 import { getLeagues } from "@/lib/repos/league";
-import { getToken } from "next-auth/jwt";
 import { findClubs, summarizeResults, updateClub, getPosition, updatePlayer, insertPlayer, insertClub, getPlayers } from "./helpers";
 import { NextRequest } from "next/server";
 import { ClubGetPayload, PlayerGetPayload } from "@/lib/generated/prisma/models";
@@ -21,8 +20,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const body = await req.json();
   if (!body.sourceUrl) return Response.json({ error: "sourceUrl is not valid" }, { status: 400 });
 
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET! });
-  if (!token) return Response.json({ error: "Unauthenticated" }, { status: 401 });
+  const authHeader = req.headers.get("authorization")
+  if (authHeader !== `Bearer ${process.env.NEXTAUTH_SECRET}`){
+    return new Response("Unauthorized", { status: 401 })
+  }
 
   const game = await getGame(gameId, { dataSyncs: true });
   if (!game) return Response.json({ error: "Game not found" }, { status: 404 });

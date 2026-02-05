@@ -35,22 +35,10 @@ export async function syncGameData(initialState: object, formData: FormData): Pr
   const game = await getGame(form.data.gameId, { dataSyncs: true });
   if (!game) throw new NotFoundError("Game not found");
 
-  const reqCookies = await cookies();
-  const token = await getToken({
-    req: {
-      headers: {
-        cookie: reqCookies.toString()
-      },
-    },
-    secret: process.env.NEXTAUTH_SECRET!,
-    raw: true,
-  });
-
-  // console.log('auth token', token);
   const res = await fetch(`${process.env.API_ROOT}/api/games/${form.data.gameId}/sync`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${token}`, // or pass full JWT if you like
+      Authorization: `Bearer ${process.env.NEXTAUTH_SECRET}`, // or pass full JWT if you like
     },
     body: JSON.stringify({
       sourceUrl: form.data.sourceUrl
