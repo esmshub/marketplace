@@ -245,3 +245,13 @@ Jan 04  T_Ivanov      31  1 17 21 15 17 Beckenham_Town_FC    Middletown_Steelers
 Jan 09  F_Jacobus     18  1  5 16  7 62 Ludlow_Penguins      Foreign_Team         11,200k
 Jan 09  E_Schuhardt   17  1  4  4 15 22 Ludlow_Penguins      Foreign_Team         0
 Jan 09  M_Sussholtz   28  1 20  9  8 28 Ludlow_Penguins      Foreign_Team         0
+----------------------------------------------------------------------------------------
+Jan 14  A_Angers      25  1  7 11 20 16 Coogee_Convicts      Churchill_Snow_Bears 200k
+Jan 14  M_Steward     25  1 26 16 16 26 Scouting             Asbo_All_Stars       21,602k
+Jan 16  T_Klaus       24  1 22 18  9 21 Asbo_All_Stars       Falkirk_Scorpions    8,000k
+----------------------------------------------------------------------------------------
+Jan 21  H_Garriock    21  1 12 25 15 37 Scouting             Ginninderra_Wildcats 21,500k
+Jan 21  N_Sirrah      20  1 16 21 15 24 Great_Preston_AFC    Jacobs_FC            10,000k
+Jan 23  D_Bottinger   34  1 23  8  3 16 Ginninderra_Wildcats Great_Preston_AFC    850k
+----------------------------------------------------------------------------------------
+Jan 28  V_Ladue       16  1 11 13 18 14 Scouting             Great_Preston_AFC    37,270k
