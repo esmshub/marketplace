@@ -40,3 +40,6 @@ jspm_packages
 
 # MacOS
 .DS_Store
+/generated/prisma
+/app/lib/generated
+/prisma/app/generated/prisma

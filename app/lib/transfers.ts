@@ -1,23 +1,32 @@
-// import { promises as fs } from 'fs';
 import { createReadStream, promises as fs } from "node:fs";
 import path from "path";
 import readline from "node:readline";
-import { columns, Transfer } from "./columns";
-import { DataTable } from "./data-table";
+import { unstable_cache } from "next/cache";
+
+export type Transfer = {
+  season: number;
+  date: string;
+  player: string;
+  age: number;
+  pos: string;
+  st: number;
+  tk: number;
+  ps: number;
+  sh: number;
+  ag: number;
+  fromClub: string;
+  toClub: string;
+  fee: number;
+};
 
 const transferRegex =
   /^(\w+\s+\d+)\s+(\S+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+([0-9][0-9,]*)(?:k)?$/;
 
-const transfers: Transfer[] = [];
-
-async function getData(): Promise<Transfer[]> {
-  if (transfers.length > 0) {
-    return transfers;
-  }
-
+async function loadPlayerTransfers(): Promise<Transfer[]> {
   const dir = path.join(process.cwd(), "app/data");
   const files = await fs.readdir(dir);
 
+  const transfers: Transfer[] = [];
   for (const file of files) {
     const fileName = path.basename(file);
     const stream = createReadStream("app/data/" + fileName, {
@@ -29,6 +38,8 @@ async function getData(): Promise<Transfer[]> {
       crlfDelay: Infinity, // Handle all CRLF/CR line endings safely
     });
 
+    const season_transfers = [];
+
     for await (const line of rl) {
       if (line === "" || line.startsWith("---")) {
         // console.log("Ignored line:",line);
@@ -39,7 +50,7 @@ async function getData(): Promise<Transfer[]> {
 
       if (match) {
         const transfer: Transfer = {
-          season: fileName.replace(path.extname(file), ""),
+          season: parseInt(fileName.replace(path.extname(file), "")),
           date: match[1],
           player: match[2],
           age: parseInt(match[3]),
@@ -81,23 +92,24 @@ async function getData(): Promise<Transfer[]> {
         } else if (skills[0].name === "sh") {
           transfer.pos = "FW";
         }
-        transfers.push(transfer);
+        season_transfers.unshift(transfer);
       }
     }
+
+    transfers.push(...season_transfers)
   }
 
+  transfers.sort((a, b) => b.season - a.season)
   return transfers;
 }
 
-export default async function TransfersPage() {
-  const data = await getData();
-
-  return (
-    <div className="container mx-auto py-10">
-      <h1>SSL Transfers</h1>
-      <div className="">
-        <DataTable columns={columns} data={data} />
-      </div>
-    </div>
-  );
-}
+export const getCachedTransfers = unstable_cache(
+  async () => {
+    console.log("Loading player transfers...");
+    return loadPlayerTransfers();
+  },
+  undefined,
+  { 
+    revalidate: 3600 // 1hr
+  }
+);

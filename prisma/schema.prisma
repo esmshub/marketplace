@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider               = "prisma-client"
+  output                 = "../app/lib/generated/prisma"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "ts"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model Game {
+  id           Int        @id @default(autoincrement())
+  code         String
+  displayName  String
+  settings     String?
+
+  leagues      League[]
+  clubs        Club[]
+  players      Player[]
+  dataSyncs    DataSync[]
+}
+
+model DataSync {
+  id        Int       @id @default(autoincrement())
+  gameId    Int
+  userId    Int
+  startTime DateTime
+  endTime   DateTime?
+  status    String
+  metadata  String?
+
+  user User @relation(fields: [userId], references: [id])
+  game Game @relation(fields: [gameId], references: [id])
+}
+
+model League {
+  id       Int     @id @default(autoincrement())
+  gameId   Int
+  name     String  @unique
+  synonyms String?
+
+  game  Game   @relation(fields: [gameId], references: [id])
+  clubs Club[]
+}
+
+model User {
+  id                  Int      @id @default(autoincrement())
+  fullName            String
+  emailAddress        String   @unique
+  provider            String?
+  providerAccountId   String?
+  createdAt           DateTime @default(now())
+
+  clubs     Club[]     @relation("ManagedClubs")
+  dataSyncs DataSync[]
+}
+
+model Club {
+  id        Int       @id @default(autoincrement())
+  gameId    Int
+  name      String
+  shortCode String    @unique
+  leagueId  Int?
+  managerId Int?
+  players   Player[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  game    Game    @relation(fields: [gameId], references: [id])
+  manager User?   @relation("ManagedClubs", fields: [managerId], references: [id])
+  league  League? @relation(fields: [leagueId], references: [id])
+}
+
+model Player {
+  id             Int       @id @default(autoincrement())
+  gameId         Int
+  clubId         Int?
+  name           String
+  age            Int
+  nat            String
+  pos            String
+  st             Int
+  tk             Int
+  ps             Int
+  sh             Int
+  ag             Int
+  kab            Int
+  tab            Int
+  pab            Int
+  sab            Int
+  inj            Int
+  sus            Int
+  marketValue    Int?
+  transferStatus String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime? @updatedAt
+
+  club Club? @relation(fields: [clubId], references: [id])
+  game Game  @relation(fields: [gameId], references: [id])
+  @@unique([name, nat])
+}

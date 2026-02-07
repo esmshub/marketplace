@@ -24,33 +24,54 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+
+const squadStatuses = ["Not for sale", "Offers invited", "Listed"];
 
 export function FilterMenu({
   filtersVisible,
+  // statuses,
   setFiltersVisible,
+  // setStatuses,
   clearFilters,
+  enabled,
 }: {
   filtersVisible: boolean;
+  // statuses: string[];
   setFiltersVisible: (func: (v: boolean) => boolean) => void;
+  // setStatuses: (v: string[]) => void;
   clearFilters: () => void;
+  enabled: boolean;
 }) {
   return (
     <ButtonGroup>
       <Button
         variant={filtersVisible ? "default" : "outline"}
         onClick={() => setFiltersVisible((v: boolean) => !v)}
+        disabled={!enabled}
       >
         <FunnelIcon />
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon" aria-label="More Options">
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label="More Options"
+            disabled={!enabled}
+          >
             <MoreHorizontalIcon />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          {/* <DropdownMenuCheckboxItem
+            checked={directSalesOnly}
+            onCheckedChange={setDirectSalesOnly}
+          >
+            Direct sales only
+          </DropdownMenuCheckboxItem> */}
+          {/* <DropdownMenuSeparator /> */}
           <DropdownMenuGroup>
             <DropdownMenuItem onClick={() => clearFilters()}>
               <FunnelXIcon />

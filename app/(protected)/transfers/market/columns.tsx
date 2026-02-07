@@ -6,51 +6,74 @@ import { CSS } from "@dnd-kit/utilities";
 import { TableHead } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
-  MoreHorizontal,
-  ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  ArrowRight,
   GripVerticalIcon,
   ListTreeIcon,
-  MoveRightIcon,
   ArrowRightIcon,
+  BandageIcon,
+  AmbulanceIcon,
+  BanIcon,
+  ShieldBanIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Fragment } from "react/jsx-runtime";
+import Link from "next/link";
+import { PlayerDto } from "@/lib/data/dataSource";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Transfer = {
-  season: string;
-  date: string;
-  player: string;
-  age: number;
-  pos: string;
-  st: number;
-  tk: number;
-  ps: number;
-  sh: number;
-  ag: number;
-  fromClub: string;
-  toClub: string;
-  fee: number;
-};
-
-export const columns: ColumnDef<Transfer>[] = [
+export const columns: ColumnDef<PlayerDto>[] = [
   {
-    accessorKey: "season",
-    header: "Season",
-    aggregatedCell: () => {},
-  },
-  {
-    accessorKey: "date",
-    header: "Date",
+    accessorKey: "inf",
+    header: "INF",
     enableColumnFilter: false,
-    enableGrouping: false,
+    filterFn: (row, id, filterValue) => {
+      if (filterValue.length === 0) return true;
+
+      return (
+        (filterValue.includes("inj") && row.original.inj > 0) ||
+        (filterValue.includes("sus") && row.original.sus > 0) ||
+        (filterValue.includes("listed") &&
+          row.original.transferStatus === "listed")
+      );
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      return (
+        rowA.original.inj -
+        rowB.original.inj +
+        rowA.original.sus -
+        rowB.original.sus
+      );
+    },
+    cell: ({ row }) => {
+      if (row.original.sus > 0) {
+        return (
+          <Badge
+            variant="destructive"
+            title="Suspension time"
+            // className="bg-blue-500 text-white dark:bg-blue-600"
+          >
+            <BanIcon />
+            {row.original.sus} week{row.original.sus > 1 && "s"}
+          </Badge>
+        );
+      } else if (row.original.inj > 0) {
+        return (
+          <Badge
+            variant="secondary"
+            className="bg-orange-500 text-white dark:bg-orange-600"
+            title="Injury time"
+          >
+            <AmbulanceIcon />
+            {row.original.inj} week{row.original.inj > 1 && "s"}
+          </Badge>
+        );
+      } else {
+        return <Badge variant="secondary">Available</Badge>;
+      }
+    },
   },
   {
-    accessorKey: "player",
+    accessorKey: "name",
     header: "Player",
     // cell: ({ row }) => (
     //   <div className="flex items-center gap-2">
@@ -64,6 +87,28 @@ export const columns: ColumnDef<Transfer>[] = [
     //   return row.getValue<string>(id).toLowerCase().includes(value.toLowerCase()) || row.original.fromClub.toLowerCase().startsWith(value.toLowerCase());
     // },
     // enableColumnFilter: true,
+  },
+  {
+    accessorKey: "club",
+    header: "Club",
+    filterFn: (row, id, value) => {
+      return (row.original.club?.name ?? "Free agent")
+        .toLowerCase()
+        .startsWith(value.toLowerCase());
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      return (rowA.original.club?.name ?? "Free agent").localeCompare(
+        rowB.original.club?.name ?? "Free agent",
+      );
+    },
+    cell: ({ row }) =>
+      // <Link
+      //   href={{ query: { clubId: row.original.club!.id } }}
+      //   className="hover:underline"
+      // >
+      //   {row.original.club?.name ?? "Free agent"}
+      // </Link>
+      row.original.club?.name ?? "Free agent",
   },
   {
     header: "Pos",
@@ -100,29 +145,52 @@ export const columns: ColumnDef<Transfer>[] = [
     aggregatedCell: () => {},
   },
   {
-    accessorKey: "fromClub",
-    header: "From",
-    // filterFn: (row, id, value) => {
-    //   return row.getValue<string>(id).toLowerCase().startsWith(value.toLowerCase());
-    // },
-    // enableColumnFilter: true,
+    accessorKey: "ag",
+    header: "AG",
+    enableColumnFilter: false,
+    aggregatedCell: () => {},
   },
   {
-    accessorKey: "toClub",
-    header: "To",
-    // filterFn: (row, id, value) => {
-    //   return row.getValue<string>(id).toLowerCase().startsWith(value.toLowerCase());
-    // },
-    // enableColumnFilter: true,
+    accessorKey: "kab",
+    header: "KAb",
+    enableColumnFilter: false,
+    aggregatedCell: () => {},
   },
   {
-    accessorKey: "fee",
-    header: "Fee",
-    cell: ({ row }) => {
-      if (row.original.fee >= 1000) {
-        return row.original.fee / 1000 + "m";
+    accessorKey: "tab",
+    header: "TAb",
+    enableColumnFilter: false,
+    aggregatedCell: () => {},
+  },
+  {
+    accessorKey: "pab",
+    header: "PAb",
+    enableColumnFilter: false,
+    aggregatedCell: () => {},
+  },
+  {
+    accessorKey: "sab",
+    header: "SAb",
+    enableColumnFilter: false,
+    aggregatedCell: () => {},
+  },
+  {
+    accessorKey: "status",
+    header: "Squad status",
+    cell: ({ getValue }) => getValue() ?? "Not set",
+    enableColumnFilter: false,
+  },
+  {
+    accessorKey: "value",
+    header: "Value",
+    cell: ({ getValue }) => {
+      const value = getValue<number>();
+      if (value === undefined) {
+        return "Not set";
+      } else if (value >= 1000) {
+        return value / 1000 + "m";
       } else {
-        return row.original.fee + "k";
+        return value + "k";
       }
     },
     aggregatedCell: ({ getValue }) => {
@@ -166,10 +234,17 @@ export const columns: ColumnDef<Transfer>[] = [
   // }
 ];
 
-export function ColumnHeader({ header }: { header: Header<any, unknown> }) {
+export function ColumnHeader({
+  header,
+  enabled,
+}: {
+  header: Header<unknown, unknown>;
+  enabled: boolean;
+}) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: header.id,
     data: header.column,
+    disabled: !enabled,
   });
   const style = {
     // Outputs `translate3d(x, y, 0)`
