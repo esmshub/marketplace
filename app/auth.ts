@@ -1,4 +1,4 @@
-import NextAuth, { Account, User } from "next-auth";
+import NextAuth, { Account, Session, User } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { createUser, getUser, getUserByEmail } from "./lib/repos/user";
 import { getGuildMember, sendNewUserNotification } from "./discord";
@@ -72,7 +72,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       const appUser = await getUser(parseInt(token["userId"] as string));
       if (!appUser) throw new Error('Local account not found');
 
@@ -84,6 +84,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           throw new Error("Provider account not found");
         }
 
+        session.user.id = appUser.id;
         session.user.isAdmin = discordAccount.roles?.includes(process.env.DISCORD_ADMIN_ROLE_ID!);
         session.user.username = discordAccount.user.username;
         session.user.providerId = appUser.providerAccountId!;

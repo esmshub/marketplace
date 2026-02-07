@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -12,7 +14,8 @@ import {
 import { ArrowLeftRightIcon, TagsIcon } from "lucide-react";
 import { GameSwitcher } from "./game-switcher";
 import { ProfileMenu } from "./profile-menu";
-import { auth } from "@/auth";
+import { useSession } from "next-auth/react";
+import { Skeleton } from "./ui/skeleton";
 
 const menuGroups: Record<
   string,
@@ -32,8 +35,47 @@ const menuGroups: Record<
   ],
 };
 
-export async function AppSidebar() {
-  const session = await auth();
+const SkeletonMenu = () => (
+  <Sidebar>
+    <SidebarHeader>
+      <div className="flex w-fit items-center gap-4 p-3">
+        <Skeleton className="size-10 shrink-0 rounded-full" />
+        <div className="grid gap-2">
+          <Skeleton className="h-4 w-[150px]" />
+          <Skeleton className="h-4 w-[100px]" />
+        </div>
+      </div>
+    </SidebarHeader>
+    <SidebarContent>
+      <div className="flex w-full max-w-xs flex-col gap-7 p-3">
+        <div className="flex flex-col gap-3">
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-8 w-full" />
+        </div>
+        <div className="flex flex-col gap-3">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-8 w-full" />
+        </div>
+        <Skeleton className="h-8 w-24" />
+      </div>
+    </SidebarContent>
+    <SidebarFooter>
+      <div className="flex w-fit items-center gap-4 p-3">
+        <Skeleton className="size-10 shrink-0 rounded-full" />
+        <div className="grid gap-2">
+          <Skeleton className="h-4 w-[150px]" />
+          <Skeleton className="h-4 w-[100px]" />
+        </div>
+      </div>
+    </SidebarFooter>
+  </Sidebar>
+);
+
+export function AppSidebar() {
+  const { data: session, status } = useSession({ required: true });
+
+  const isLoading = status === "loading";
+  if (isLoading) return <SkeletonMenu />;
 
   return (
     <Sidebar collapsible="icon">
@@ -62,7 +104,7 @@ export async function AppSidebar() {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        {session?.user && <ProfileMenu user={session!.user} />}
+        <ProfileMenu user={session.user} />
       </SidebarFooter>
     </Sidebar>
   );
