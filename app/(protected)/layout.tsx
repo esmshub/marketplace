@@ -8,7 +8,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { mapToGameDto } from "@/lib/mapper";
 import { getGames } from "@/lib/repos/game";
-import { Suspense } from "react";
 
 export default async function ProtectedAppLayout({
   children,

@@ -1,25 +1,4 @@
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-  ItemSeparator,
-  ItemTitle,
-} from "@/components/ui/item";
-import {
-  BadgeIcon,
-  ChevronDown,
-  InfoIcon,
-  ShieldBanIcon,
-  ShieldCheckIcon,
-  ShieldIcon,
-  ShieldPlusIcon,
-  ShieldUserIcon,
-  UserCheckIcon,
-  UserPlusIcon,
-  Users,
-} from "lucide-react";
+import { ListOrderedIcon, ShieldBanIcon, Users } from "lucide-react";
 import {
   DataSyncDto,
   DataSyncFailedMetadata,
@@ -35,14 +14,11 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
 
 const SuccessfulSyncInfo = ({ data }: { data: DataSyncSuccessfulMetadata }) => {
   return (
@@ -71,6 +47,14 @@ const SuccessfulSyncInfo = ({ data }: { data: DataSyncSuccessfulMetadata }) => {
           <TableCell>{data.players.inserted}</TableCell>
           <TableCell>{data.players.updated}</TableCell>
           <TableCell>{data.players.failed}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="inline-flex items-center gap-x-1">
+            <ListOrderedIcon /> Leagues
+          </TableCell>
+          <TableCell>{data.leagues.inserted}</TableCell>
+          <TableCell>{data.leagues.updated}</TableCell>
+          <TableCell>{data.leagues.failed}</TableCell>
         </TableRow>
       </TableBody>
     </Table>

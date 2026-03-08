@@ -6,7 +6,34 @@ async function main() {
       code: 'ssl',
       displayName: 'SSL 2001',
       settings: JSON.stringify({
-        sourceUrl: 'http://www.ssl2001.ukhome.net/teams.htm'
+        dataSource: {
+          type: 'web_scrape',
+          config: {
+            clubsUrl: 'https://ssl2001.uk/teams.htm',
+            leagues: {
+              'Premiership': {
+                tableUrl: 'https://ssl2001.uk/table_premier.txt',
+                fixturesUrl: 'https://ssl2001.uk/fixtures_premier.txt',
+              },
+              'Division 1': {
+                tableUrl: 'https://ssl2001.uk/table_first.txt',
+                fixturesUrl: 'https://ssl2001.uk/fixtures_first.txt',
+              },
+              'Division 2': {
+                tableUrl: 'https://ssl2001.uk/table_second.txt',
+                fixturesUrl: 'https://ssl2001.uk/fixtures_second.txt',
+              },
+              'Youth Division 1': {
+                tableUrl: 'https://ssl2001.uk/table_yd1.txt',
+                fixturesUrl: 'https://ssl2001.uk/fixtures_yd1.txt',
+              },
+              'Youth Division 2': {
+                tableUrl: 'https://ssl2001.uk/table_yd2.txt',
+                fixturesUrl: 'https://ssl2001.uk/fixtures_yd2.txt',
+              }
+            }
+          }
+        },
       }),
       leagues: {
         create: [

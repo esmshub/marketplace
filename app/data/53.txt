@@ -255,3 +255,21 @@ Jan 21  N_Sirrah      20  1 16 21 15 24 Great_Preston_AFC    Jacobs_FC          
 Jan 23  D_Bottinger   34  1 23  8  3 16 Ginninderra_Wildcats Great_Preston_AFC    850k
 ----------------------------------------------------------------------------------------
 Jan 28  V_Ladue       16  1 11 13 18 14 Scouting             Great_Preston_AFC    37,270k
+----------------------------------------------------------------------------------------
+Feb 02  P_Acus        29  1 21  8 16 10 Ontario_Maple_Hawks  Foreign_Team         10,600k
+Feb 02  T_Cayton      17  1 15  4  8 47 Ontario_Maple_Hawks  Foreign_Team         0
+Feb 02  F_Hute        17  1  5 15  5 35 Ontario_Maple_Hawks  Foreign_Team         0
+Feb 04  H_Basurto     27  1 17 27 19 27 Scouting             Flyboys_1986         23,000k
+----------------------------------------------------------------------------------------
+Feb 11  J_Rodon       16  1 18 11 11 29 Scouting             Middletown_Steelers  31,100k
+----------------------------------------------------------------------------------------
+Feb 18  T_Holleran    23 27  1  1  1 28 Scouting             Churchill_Snow_Bears 25,700k
+----------------------------------------------------------------------------------------
+Feb 23  G_Hall        17  1 15  4  7 11 AC_Larne             Foreign_Team         12,000k
+Feb 23  P_Penguinzo   19  1  6  3 18  9 AC_Larne             Foreign_Team         0
+Feb 25  C_Mendoza     17  1 13 19 15 18 Scouting             Churchill_Snow_Bears 27,100k
+Feb 27  D_Guminy      19  1  5 17  5 11 Churchill_Snow_Bears Foreign_Team         12,000k
+Feb 27  I_Tanzi       18  1 16  6  5 39 Churchill_Snow_Bears Foreign_Team         0
+----------------------------------------------------------------------------------------
+Mar 04  Dr_Snuggles   24  1 12 14 26 17 Scouting             AC_Larne             30,600k
+Mar 05  D_Klobuchar   24 23  1  1  1 13 Ripon_Rowels         Asbo_All_Stars       7,500k

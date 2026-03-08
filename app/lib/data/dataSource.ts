@@ -1,16 +1,12 @@
+import { ManagerDto } from "../domain/club"
+
 export interface DataSourceResponse<T> {
   errors: Error[]
   data: T
 }
 
 export interface DataSource<T> {
-  load(): Promise<DataSourceResponse<T>>
-}
-
-export interface UserDto {
-  id?: number
-  fullName: string
-  emailAddress: string
+  getData(): T
 }
 
 export interface ClubDto {
@@ -18,10 +14,9 @@ export interface ClubDto {
   gameId?: number
   shortCode: string
   name: string
-  manager?: UserDto
+  manager?: ManagerDto
   leagueId?: number
   updatedAt?: Date
-  players: PlayerDto[]
 }
 
 export interface PlayerDto {
@@ -47,4 +42,21 @@ export interface PlayerDto {
   marketValue?: number
   updatedAt?: Date
   club: ClubDto | null
+}
+
+export interface LeagueClubStats {
+  clubName: string
+  played: number
+  won: number
+  drawn: number
+  lost: number
+  gf: number
+  ga: number
+  gd: number
+  pts: number
+  updatedAt?: Date
+}
+
+export interface LeagueDto {
+  table: LeagueClubStats[]
 }

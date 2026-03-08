@@ -1,10 +1,10 @@
 import { League } from "../domain/league";
-import { LeagueInclude } from "../generated/prisma/models";
+import { LeagueInclude, LeagueWhereInput } from "../generated/prisma/models";
 import { mapToLeague } from "../mapper";
 import { prisma } from "./prisma";
 
-export async function getLeagues(include?: LeagueInclude): Promise<League[]>{
-  const leagues = await prisma.league.findMany({include});
+export async function getLeagues(options: { where: LeagueWhereInput, include?: LeagueInclude }): Promise<League[]>{
+  const leagues = await prisma.league.findMany(options);
   return leagues.map((l) => mapToLeague(l));
 }
 

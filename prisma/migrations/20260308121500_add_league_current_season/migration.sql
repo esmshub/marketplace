@@ -1,0 +1,2 @@
+ALTER TABLE "League"
+ADD COLUMN "currentSeason" INTEGER NOT NULL DEFAULT 1;

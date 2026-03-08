@@ -6,13 +6,9 @@ export interface GameDto {
   id: number;
   code: string;
   displayName: string;
-  settings: { sourceUrl: string };
+  settings: Record<string, object>;
   isSyncing: boolean;
   lastSync: DataSyncDto | null;
-}
-
-interface GameSettings {
-  sourceUrl: string;
 }
 
 const SYNC_COOLING_OFF_PERIOD = 30000;
@@ -22,7 +18,7 @@ export class Game {
     public id: number,
     public code: string,
     public displayName: string,
-    public settings: GameSettings,
+    public settings: Record<string, object>,
     public readonly dataSyncs: DataSync[]
   ) {
     this.dataSyncs.sort((a, b) => {

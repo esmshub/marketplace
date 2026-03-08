@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   const playerFetch = unstable_cache(
     async (gameId?: number) => {
       console.log("Fetching players from Database...");
-      return getPlayers({ gameId });
+      return getPlayers({ where: { gameId }});
     },
     ["players"],
     {

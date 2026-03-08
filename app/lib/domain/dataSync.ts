@@ -10,6 +10,11 @@ export interface DataSyncSuccessfulMetadata {
     updated: number;
     inserted: number;
     failed: number;
+  },
+  leagues: {
+    updated: number;
+    inserted: number;
+    failed: number;
   }
 }
 

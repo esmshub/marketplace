@@ -52,6 +52,7 @@ export function mapToLeague(entity: LeagueGetPayload<null>): League {
   const league = new League(entity.id);
   league.name = entity.name;
   league.synonyms = entity.synonyms;
+  league.currentSeason = entity.currentSeason;
   league.clubs = (entity as LeagueWithClubs).clubs?.map(mapToClub) ?? [];
   return league;
 }

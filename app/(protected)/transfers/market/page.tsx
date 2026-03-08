@@ -5,6 +5,7 @@ import { ClubInfoSheet } from "@/components/club-info";
 import { redirect } from "next/navigation";
 import PageContent from "@/components/page-content";
 import { getPlayers } from "./actions";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default async function TransferMarketPage({
   searchParams,
@@ -22,13 +23,13 @@ export default async function TransferMarketPage({
   };
 
   return (
-    // <div className="flex flex-col container mx-auto py-10 gap-y-4">
-    // <div>
     <PageContent title="Transfer Market">
-      <DataTable columns={columns} data={players} user={session!.user} />
-      {queryParams.clubId && <ClubInfoSheet />}
+      <Card>
+        <CardContent>
+          <DataTable columns={columns} data={players} user={session!.user} />
+          {queryParams.clubId && <ClubInfoSheet />}
+        </CardContent>
+      </Card>
     </PageContent>
-    // </div>
-    // </div>
   );
 }

@@ -43,9 +43,11 @@ model League {
   gameId   Int
   name     String  @unique
   synonyms String?
+  currentSeason Int @default(1)
 
   game  Game   @relation(fields: [gameId], references: [id])
   clubs Club[]
+  seasons LeagueSeason[]
 }
 
 model User {
@@ -74,6 +76,17 @@ model Club {
   game    Game    @relation(fields: [gameId], references: [id])
   manager User?   @relation("ManagedClubs", fields: [managerId], references: [id])
   league  League? @relation(fields: [leagueId], references: [id])
+}
+
+model LeagueSeason {
+  leagueId    Int
+  season      Int
+  tablePayload    String
+  fixturesPayload String
+
+  league  League? @relation(fields: [leagueId], references: [id])
+
+  @@id([leagueId, season])
 }
 
 model Player {

@@ -58,6 +58,16 @@ CREATE TABLE "Club" (
 );
 
 -- CreateTable
+CREATE TABLE "LeagueSeason" (
+    "leagueId" INTEGER NOT NULL,
+    "season" INTEGER NOT NULL,
+    "tablePayload" TEXT NOT NULL,
+    "fixturesPayload" TEXT NOT NULL,
+
+    CONSTRAINT "LeagueSeason_pkey" PRIMARY KEY ("leagueId","season")
+);
+
+-- CreateTable
 CREATE TABLE "Player" (
     "id" SERIAL NOT NULL,
     "gameId" INTEGER NOT NULL,
@@ -114,6 +124,9 @@ ALTER TABLE "Club" ADD CONSTRAINT "Club_managerId_fkey" FOREIGN KEY ("managerId"
 
 -- AddForeignKey
 ALTER TABLE "Club" ADD CONSTRAINT "Club_leagueId_fkey" FOREIGN KEY ("leagueId") REFERENCES "League"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "LeagueSeason" ADD CONSTRAINT "LeagueSeason_leagueId_fkey" FOREIGN KEY ("leagueId") REFERENCES "League"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Player" ADD CONSTRAINT "Player_clubId_fkey" FOREIGN KEY ("clubId") REFERENCES "Club"("id") ON DELETE SET NULL ON UPDATE CASCADE;
