@@ -44,7 +44,6 @@ export function mapToClubDto(club: Club): ClubDto {
     leagueId: club.league?.id,
     name: club.name!,
     shortCode: club.shortCode!,
-    players: club.players?.map(mapToPlayerDto) ?? [],
   };
 }
 

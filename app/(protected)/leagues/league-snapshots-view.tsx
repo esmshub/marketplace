@@ -38,11 +38,6 @@ export async function LeagueSnapshotsView({
   }
 
   const firstLeague = leagueSnapshots[0];
-  const defaultZoneConfig = {
-    promotionLine: 2,
-    playoffLine: 6,
-    relegationStart: 12,
-  };
   const zoneConfigByLeagueName: Record<
     string,
     { promotionLine?: number; playoffLine?: number; relegationStart?: number }

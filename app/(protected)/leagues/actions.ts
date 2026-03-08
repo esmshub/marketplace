@@ -1,6 +1,7 @@
-import { getGames } from "@/lib/repos/game";
 import { getLeagues as getLeagueRows } from "@/lib/repos/league";
 import { getLeagueSeasons } from "@/lib/repos/leagueSeason";
+import { prisma } from "@/lib/repos/prisma";
+import { connection } from "next/server";
 
 export interface LeagueTableRow {
   clubName: string
@@ -46,12 +47,16 @@ function parseJsonArray<T>(payload: string): T[] {
 }
 
 export async function getLeagueSnapshots(): Promise<LeagueSnapshot[]> {
-  const games = await getGames();
-  if (games.length === 0) {
+  await connection();
+
+  const activeGame = await prisma.game.findFirst({
+    orderBy: { id: "asc" },
+    select: { id: true },
+  });
+  if (!activeGame) {
     return [];
   }
 
-  const activeGame = games[0];
   const leagues = await getLeagueRows({ where: { gameId: activeGame.id } });
   if (leagues.length === 0) {
     return [];
