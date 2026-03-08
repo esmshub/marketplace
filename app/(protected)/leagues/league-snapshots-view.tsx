@@ -43,12 +43,12 @@ export async function LeagueSnapshotsView({
     { promotionLine?: number; playoffLine?: number; relegationStart?: number }
   > = {
     Premiership: {
-      relegationStart: 13,
+      relegationStart: 12,
     },
-    "Division 1": { promotionLine: 2, playoffLine: 6, relegationStart: 11 },
+    "Division 1": { promotionLine: 2, playoffLine: 6, relegationStart: 10 },
     "Division 2": { promotionLine: 2, playoffLine: 6 },
-    "Youth Division 1": { relegationStart: 18 },
-    "Youth Division 2": { promotionLine: 2, playoffLine: 6 },
+    "Youth Division 1": { relegationStart: 16 },
+    "Youth Division 2": { promotionLine: 4, playoffLine: 8 },
   };
 
   return (
