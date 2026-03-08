@@ -11,7 +11,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { ArrowLeftRightIcon, TagsIcon } from "lucide-react";
+import {
+  ArrowLeftRightIcon,
+  CalendarDaysIcon,
+  ListOrderedIcon,
+  TagsIcon,
+} from "lucide-react";
 import { GameSwitcher } from "./game-switcher";
 import { ProfileMenu } from "./profile-menu";
 import { useSession } from "next-auth/react";
@@ -21,6 +26,18 @@ const menuGroups: Record<
   string,
   { name: string; href: string; icon: React.ReactNode }[]
 > = {
+  leagues: [
+    {
+      name: "Tables",
+      href: "/leagues/tables",
+      icon: <ListOrderedIcon />,
+    },
+    {
+      name: "Fixtures",
+      href: "/leagues/fixtures",
+      icon: <CalendarDaysIcon />,
+    },
+  ],
   transfers: [
     {
       name: "Marketplace",

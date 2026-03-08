@@ -7,7 +7,7 @@ export async function getPlayers() {
   cacheTag("players");
   cacheLife("days");
 
-  const clubs = await getClubs({ players: true });
+  const clubs = await getClubs({ include: { players: true } });
   const players = clubs.flatMap(
     (club) => club.players?.map((p) => mapToPlayerDto({ ...p, club })) ?? [],
   );

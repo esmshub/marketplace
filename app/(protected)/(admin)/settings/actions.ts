@@ -17,14 +17,14 @@ interface SyncResponse {
 
 const DataSyncForm = z.object({ 
   gameId: z.coerce.number().int(),
-  sourceUrl: z.url()
+  config: z.json().transform(json => JSON.parse(json as string)),
 });
 
 export async function syncGameData(initialState: object, formData: FormData): Promise<DataSyncDto | { [key: string]: string }> {
   // return { error: "Unknown error has occurred" };
   const form = DataSyncForm.safeParse({
     gameId: formData.get("gameId"),
-    sourceUrl: formData.get("sourceUrl")
+    config: formData.get("config"),
   });
   if (!form.success) throw new ValidationError(form.error.message);
 
@@ -42,7 +42,7 @@ export async function syncGameData(initialState: object, formData: FormData): Pr
     },
     body: JSON.stringify({
       userId: session.user.id,
-      sourceUrl: form.data.sourceUrl
+      config: form.data.config,
     }),
   });
 

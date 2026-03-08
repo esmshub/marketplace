@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   const includePlayers = searchParams.get('players')?.toLowerCase() === 'true';
 
   console.log("Fetching players from Database...");
-  const clubs = await getClubs({ players: includePlayers });
+  const clubs = await getClubs({ include: { players: includePlayers } });
 
   return Response.json(clubs, { status: 200 });
 }

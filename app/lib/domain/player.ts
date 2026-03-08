@@ -1,6 +1,24 @@
 import { Club } from "./club"
 import { Game } from "./game"
 
+export interface PlayerData {
+  name: string
+  age: number
+  nat: string
+  pos: string
+  st: number
+  tk: number
+  ps: number
+  sh: number
+  ag: number
+  kab: number
+  tab: number
+  pab: number
+  sab: number
+  inj: number
+  sus: number
+}
+
 export class Player {
   constructor(
     public readonly id: number

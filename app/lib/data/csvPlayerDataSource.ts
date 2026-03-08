@@ -39,13 +39,13 @@ function getPosition(player: PlayerDto): string {
   return pos;
 }
 
-export default class CsvPlayerDataSource implements DataSource<PlayerDto[]> {
+export default class CsvPlayerDataSource implements DataSource<Promise<PlayerDto[]>> {
   constructor(
     private readonly sourceUrl: string
   ) {
   }
 
-  async load(): Promise<DataSourceResponse<PlayerDto[]>> {
+  async getData(): Promise<PlayerDto[]> {
     if (!this.sourceUrl) {
       throw new Error("Missing SSL sourceUrl");
     }
@@ -54,8 +54,10 @@ export default class CsvPlayerDataSource implements DataSource<PlayerDto[]> {
     // TODO: move URL to config somewhere...
     const res = await fetch(this.sourceUrl);
     if (!res.ok) {
-      return { errors: [new Error(`${res.status} - ${res.statusText}`)], data: [] };
+      console.error(`${res.status} - ${res.statusText})`);
+      throw new Error(`Failed to fetch player data from URL: ${this.sourceUrl}`);
     }
+  
     let lastModified: Date;
     if (res.headers.has('Last-Modified')) {
       lastModified = new Date(res.headers.get('Last-Modified')!);
@@ -101,9 +103,6 @@ export default class CsvPlayerDataSource implements DataSource<PlayerDto[]> {
       results.push(dto);
     }
 
-    return {
-      errors: [],
-      data: results
-    };
+    return results
   }
 }
