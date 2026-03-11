@@ -5,17 +5,18 @@ import { redirect, RedirectType } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Toaster } from "@/components/ui/sonner";
 import { Suspense } from "react";
-import { EmptyPanel } from "@/components/empty-panel";
-import { Spinner } from "@/components/ui/spinner";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const { status } = useSession();
+  const searchParams = useSearchParams();
+  const redirectTarget = searchParams.get("redirect") ?? searchParams.get("callbackUrl") ?? "/";
 
   console.log(status);
   if (status === "loading") {
     return null;
   } else if (status === "authenticated") {
-    return redirect("/", RedirectType.replace);
+    return redirect(redirectTarget, RedirectType.replace);
   }
 
   // const session = await auth();

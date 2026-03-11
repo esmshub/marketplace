@@ -27,10 +27,27 @@ export interface LeagueFixtureRound {
 
 export interface LeagueSnapshot {
   leagueId: number
+  leagueKey: string
   leagueName: string
   currentSeason: number
   table: LeagueTableRow[]
   fixtures: LeagueFixtureRound[]
+}
+
+function buildLeagueKey(leagueName: string): string {
+  const aliasMap: Record<string, string> = {
+    Premiership: "prem",
+    "Division 1": "div1",
+    "Division 2": "div2",
+    "Youth Division 1": "ydiv1",
+    "Youth Division 2": "ydiv2",
+  };
+
+  if (aliasMap[leagueName]) {
+    return aliasMap[leagueName];
+  }
+
+  return leagueName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
 function parseJsonArray<T>(payload: string): T[] {
@@ -83,6 +100,7 @@ export async function getLeagueSnapshots(): Promise<LeagueSnapshot[]> {
 
       return {
         leagueId: league.id,
+        leagueKey: buildLeagueKey(league.name ?? `League ${league.id}`),
         leagueName: league.name ?? `League ${league.id}`,
         currentSeason: seasonSnapshot.season,
         table,

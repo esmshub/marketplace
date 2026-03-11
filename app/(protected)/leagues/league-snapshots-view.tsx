@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageContent from "@/components/page-content";
 import { getLeagueSnapshots } from "./actions";
@@ -16,9 +17,13 @@ export type LeagueViewMode = "table" | "fixtures";
 export async function LeagueSnapshotsView({
   title,
   mode,
+  basePath,
+  selectedLeagueKey,
 }: {
   title: string;
   mode: LeagueViewMode;
+  basePath: string;
+  selectedLeagueKey?: string;
 }) {
   const leagueSnapshots = await getLeagueSnapshots();
 
@@ -38,6 +43,9 @@ export async function LeagueSnapshotsView({
   }
 
   const firstLeague = leagueSnapshots[0];
+  const selectedLeague =
+    leagueSnapshots.find((league) => league.leagueKey === selectedLeagueKey)
+    ?? firstLeague;
   const zoneConfigByLeagueName: Record<
     string,
     { promotionLine?: number; playoffLine?: number; relegationStart?: number }
@@ -53,41 +61,39 @@ export async function LeagueSnapshotsView({
 
   return (
     <PageContent title={title}>
-      <Tabs defaultValue={String(firstLeague.leagueId)}>
+      <Tabs value={selectedLeague.leagueKey}>
         <TabsList className="flex h-auto w-full flex-wrap">
           {leagueSnapshots.map((league) => (
-            <TabsTrigger key={league.leagueId} value={String(league.leagueId)}>
-              {league.leagueName}
+            <TabsTrigger key={league.leagueId} value={league.leagueKey} asChild>
+              <Link href={`${basePath}?league=${league.leagueKey}`}>{league.leagueName}</Link>
             </TabsTrigger>
           ))}
         </TabsList>
 
-        {leagueSnapshots.map((league) => (
-          <TabsContent key={league.leagueId} value={String(league.leagueId)}>
-            <Card>
-              <CardHeader>
-                <CardTitle>{league.leagueName}</CardTitle>
-                <CardDescription>Season {league.currentSeason}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {mode === "table" && (
-                  <div className="pt-1">
-                    <LeagueTableWithZones
-                      rows={league.table}
-                      zones={zoneConfigByLeagueName[league.leagueName]}
-                    />
-                  </div>
-                )}
+        <TabsContent value={selectedLeague.leagueKey}>
+          <Card>
+            <CardHeader>
+              <CardTitle>{selectedLeague.leagueName}</CardTitle>
+              <CardDescription>Season {selectedLeague.currentSeason}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {mode === "table" && (
+                <div className="pt-1">
+                  <LeagueTableWithZones
+                    rows={selectedLeague.table}
+                    zones={zoneConfigByLeagueName[selectedLeague.leagueName]}
+                  />
+                </div>
+              )}
 
-                {mode === "fixtures" && (
-                  <div className="pt-1">
-                    <FixturesScrollPane rounds={league.fixtures} />
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        ))}
+              {mode === "fixtures" && (
+                <div className="pt-1">
+                  <FixturesScrollPane rounds={selectedLeague.fixtures} />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </PageContent>
   );

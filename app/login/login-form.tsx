@@ -11,6 +11,7 @@ import { useSearchParams } from "next/navigation";
 export default function LoginForm() {
   const query = useSearchParams();
   const errorReason = query.get("error");
+  const redirectTarget = query.get("redirect") ?? query.get("callbackUrl") ?? "/";
 
   useEffect(() => {
     if (errorReason) {
@@ -69,9 +70,7 @@ export default function LoginForm() {
               variant="outline"
               type="button"
               className="!w-2/3"
-              onClick={() =>
-                signIn("discord", { redirectTo: query.get("redirect") ?? "/" })
-              }
+              onClick={() => signIn("discord", { redirectTo: redirectTarget })}
             >
               <Image src={DiscordLogo} alt="Discord" className="dark:invert" />
               Continue with Discord
