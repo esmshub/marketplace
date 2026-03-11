@@ -1,5 +1,4 @@
 import { auth } from '@/auth'
-import { NextURL } from 'next/dist/server/web/next-url';
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -17,7 +16,12 @@ export async function proxy(request: NextRequest) {
   // console.log('Session:', session);
 
   if (!isAuthenticated && isApiRoute) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if (!isAuthenticated) return NextResponse.redirect(new URL('/login?redirect=' + request.nextUrl.pathname, request.url));
+  if (!isAuthenticated) {
+    const redirectTarget = `${request.nextUrl.pathname}${request.nextUrl.search}`;
+    return NextResponse.redirect(
+      new URL(`/login?redirect=${encodeURIComponent(redirectTarget)}`, request.url),
+    );
+  }
 
   return NextResponse.next()
 }
