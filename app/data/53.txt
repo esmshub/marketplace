@@ -155,7 +155,7 @@ Dec 10  L_Piszczek    18  1 20 15 13 28 Auction              FV_Schwarzwald_12  
 Dec 10  N_Neuman      25  1 26 19 17 37 Auction              Butetown_Rovers      25,000k
 Dec 10  V_Schutt      17  1 18 12 12 27 Auction              Baggies_FC           21,000k
 Dec 10  P_Diddy       27  1 23 27 21 15 Auction              Coogee_Convicts      31,500k
-Dec 10  T_Greenberg   26  1 27 21 18 24 Auction              Dublin_Sheisskickers 32,500k
+Dec 10  T_Greenberg   26  1 27 21 18 24 Auction              Dublin_Scheisskickers 32,500k
 Dec 10  T_Tycehurst   20  1  8  6 18 12 Castleford_Town      Middletown_Steelers  500k
 Dec 11  Ronaldo       20  1 14 14 23 20 Auction              Derry_Patriots       25,000k
 Dec 11  J_Muldrew     17  1  5 15  4 18 FV_Schwarzwald_12    Foreign_Team         12,000k
@@ -165,12 +165,12 @@ Dec 11  J_Klins       22  1 24 12 11 36 Auction              Byker_Grove_Beavers
 Dec 11  A_Nisley      16  1 13 17 10 26 Auction              Butetown_Rovers      26,500k
 Dec 11  Y_Varga       28  1 21 23 27 16 Auction              Butetown_Rovers      26,500k
 Dec 11  Leon          17  1 13 13 19 26 Auction              Huracan_Rhythm       32,500k
-Dec 11  S_Pond        21  1  7 12 20 47 Dublin_Sheisskickers Foreign_Team         12,000k
-Dec 11  J_Crudup      19  1  6  5 17 55 Dublin_Sheisskickers Foreign_Team         0
-Dec 11  J_Weathers    16  1  9  4 14 13 Dublin_Sheisskickers Foreign_Team         0
+Dec 11  S_Pond        21  1  7 12 20 47 Dublin_Scheisskickers Foreign_Team         12,000k
+Dec 11  J_Crudup      19  1  6  5 17 55 Dublin_Scheisskickers Foreign_Team         0
+Dec 11  J_Weathers    16  1  9  4 14 13 Dublin_Scheisskickers Foreign_Team         0
 Dec 11  K_Spurgin     24  1 25 14 12 21 Auction              Mincers_FC           19,000k
-Dec 11  X_Turchi      17  1 16  5  7 16 Dublin_Sheisskickers Judithiniikos        0
-Dec 11  E_Castlen     16  1 10 13 14 35 Judithiniikos        Dublin_Sheisskickers 0
+Dec 11  X_Turchi      17  1 16  5  7 16 Dublin_Scheisskickers Judithiniikos        0
+Dec 11  E_Castlen     16  1 10 13 14 35 Judithiniikos        Dublin_Scheisskickers 0
 Dec 11  S_Koppel      21  1  6 17  5 17 Coogee_Convicts      Middletown_Steelers  150k
 Dec 11  T_Fajardo     20  1 21 18  6 16 Byker_Grove_Beavers  Jacobs_FC            16,000k
 Dec 11  C_Ronan       25  2 20 12 15 12 Coogee_Convicts      Falkirk_Scorpions    150k
@@ -273,3 +273,54 @@ Feb 27  I_Tanzi       18  1 16  6  5 39 Churchill_Snow_Bears Foreign_Team       
 ----------------------------------------------------------------------------------------
 Mar 04  Dr_Snuggles   24  1 12 14 26 17 Scouting             AC_Larne             30,600k
 Mar 05  D_Klobuchar   24 23  1  1  1 13 Ripon_Rowels         Asbo_All_Stars       7,500k
+----------------------------------------------------------------------------------------
+Mar 11  D_Mendes      28  1 27 21 19 35 Scouting             Holcombe_Hotshots    17,435k
+Mar 12  P_Cintoli     24  1 20  8  7 21 Washington_Sports    Foreign_Team         3,800k
+Mar 12  Y_Zaretsky    16  1  8 14  5 15 Washington_Sports    Foreign_Team         0
+Mar 12  U_Cowmey      19  1  3  6 15 26 Washington_Sports    Foreign_Team         0
+Mar 13  M_Taricco     18  1 16  3  4 13 Holcombe_Hotshots    Foreign_Team         11,800k
+Mar 13  S_Carr        18  1 16  3  8 19 Holcombe_Hotshots    Foreign_Team         0
+----------------------------------------------------------------------------------------
+Mar 15  C_Danvers     28  1 28 22 16 24 Churchill_Snow_Bears Manchester_Reds      21,000k
+Mar 17  B_Sudbrock    22  1 24 18 11 12 Jacobs_FC            Asbo_All_Stars       5,000k
+Mar 17  C_Dearlove    21  1 23 15 10 12 Asbo_All_Stars       Jacobs_FC            0
+Mar 17  P_Prosecco    30  1 19 18 20  9 Asbo_All_Stars       Jacobs_FC            0
+Mar 18  M_Crosas      18  1 13 19 10 20 Scouting             Burntwood_Rovers     21,500k
+----------------------------------------------------------------------------------------
+Mar 25  Y_Chase       26  1 27 17 16 23 Scouting             Shurdington_AFC      22,500k
+Mar 28  D_Marroquin   28  1 21 22 10 14 Flyboys_1986         Beckenham_Town_FC    4,000k
+Mar 28  G_Busbin      30  1 17 21 17 19 Beckenham_Town_FC    Belfast_Firefighters 500k
+----------------------------------------------------------------------------------------
+Mar 30  A_Tyrie       18  1 17  9  8 31 Churchill_Snow_Bears Judithiniikos        6,000k
+Mar 30  D_Klobuchar   24 23  1  1  1 13 Asbo_All_Stars       Judithiniikos        7,000k
+Apr 01  W_Mcauley     20  1 15 22 15 35 Scouting             Ontario_Maple_Hawks  21,700k
+----------------------------------------------------------------------------------------
+Apr 08  O_Hensley     17  1 19 14 13 17 Scouting             Dublin_Scheisskickers 22,500k
+Apr 11  J_Salminen    20  1  6  5 20  8 Flyboys_1986         Foreign_Team         12,000k
+Apr 11  E_Ludlum      19  1  5  7 17 65 Flyboys_1986         Foreign_Team         0
+----------------------------------------------------------------------------------------
+Apr 15  P_Kazbek      22  1 15 11 24 31 Scouting             Ludlow_Penguins      24,500k
+----------------------------------------------------------------------------------------
+Apr 20  U_Logie       20 18  1  1  1 31 Welling_Town         Huracan_Rhythm       200k
+Apr 22  K_Allaire     19  1 21 14 10 27 Scouting             Churchill_Snow_Bears 10,300k
+----------------------------------------------------------------------------------------
+Apr 26  B_Faflik      18  1 16  6  5 17 Asbo_All_Stars       Foreign_Team         12,000k
+Apr 26  G_Gellert     18  1  6  3 16 44 Asbo_All_Stars       Foreign_Team         0
+Apr 26  S_Chairs      17  1  5 16  7 12 Middletown_Steelers  Foreign_Team         11,800k
+Apr 26  Q_Newey       24  1 20 15  8 12 Middletown_Steelers  Foreign_Team         0
+Apr 26  Jalen_Hurts   23  1 20 14 14  9 Middletown_Steelers  Foreign_Team         0
+Apr 27  C_Raitz       18  1 17  8  7 14 Middletown_Steelers  Judithiniikos        4,000k
+Apr 28  A_Savoca      28 26  1  1  1 23 Churchill_Snow_Bears Baggies_FC           10,000k
+Apr 29  C_Raitz       18  1 17  8  7 14 Judithiniikos        Foreign_Team         12,000k
+Apr 30  S_Tsinglas    30  1 26 12  6 27 Les_Dieus_du_Monde   Churchill_Snow_Bears 1,000k
+May 02  I_Sudlow      19  1  6  8 18 17 Welling_Town         Foreign_Team         9,125k
+May 02  P_Arramy      21  1  5 18  6 18 Welling_Town         Foreign_Team         0
+May 02  Q_Gutierrez   29  1 20  4  5 39 Welling_Town         Foreign_Team         0
+----------------------------------------------------------------------------------------
+Jun 06  R_Andresen    32  1  2  9 26 30 Les_Dieus_du_Monde   Huracan_Rhythm       1,250k
+Jun 06  V_Loder       20  1  8 15 18  8 Castleford_Town      Middletown_Steelers  250k
+Jun 06  E_Durnbaugh   20  1 19  9  8 13 Jacobs_FC            Middletown_Steelers  250k
+Jun 06  AJ_Fernandes  31  1 17 18 20 16 Asbo_All_Stars       Falkirk_Scorpions    250k
+Jun 06  M_Allen       32  1 27 16 13 21 Red_Star_Llama       Ginninderra_Wildcats 3,000k
+Jun 06  T_Zachreson   20  1 14 19  5 37 Midland_FC           Manchester_Reds      1,000k
+Jun 06  B_Buyea       20  1 12 19  9 16 Midland_FC           Manchester_Reds      0
